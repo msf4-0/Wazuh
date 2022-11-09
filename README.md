@@ -1,7 +1,7 @@
 # **Wazuh**
 Wazuh is a free and open source security platform that unifies XDR (Extended Detection and Response) and SIEM (Security Information and Event Management) capabilities. It protects workloads across on-premises, virtualized, containerized, and cloud-based environments.
 
-## **Recommended Environment**
+# **Recommended Environment**
 Ubuntu is recommended to deploy Wazuh Manager. 
 
 For lightweight deployment, use Ubuntu Server for less resource consumption on the OS.
@@ -181,26 +181,26 @@ Start Wazuh using docker-compose
 docker-compose up -d
 ```
 
-# Wazuh Agent Installation
-## Linux
+# **Wazuh Agent Installation**
+## **Linux**
 1. Access the Wazuh web interface
 2. Go to Agents
 3. Deploy new agents
 4. Select and fill in the data according to the endpoint that needs to install Wazuh agent
 5. Run the command shown in step 5 and 6
 
-## Windows
-### Installer
+## **Windows**
+### **Installer**
 The installer can be downloaded with the link at [Wazuh Agent Installer](https://packages.wazuh.com/4.x/windows/wazuh-agent-4.3.9-1.msi)
 
-### Powershell
+### **Powershell**
 The same can be done at the [Linux]() section in the powershell. Fill in the data with the Windows OS selected and copy the command into powershell to execute.
 
-## Agents In Cluster
+## **Agents In Cluster**
 Pointing the agent to the cluster node
 ```
 
 ```
 
-# Features
-## Active Reponse
+# **Features**
+## **Active Reponse**
