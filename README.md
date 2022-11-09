@@ -146,13 +146,40 @@ docker-compose --version
 ```
 
 ### **Single-Node Deployment**
+Clone the repository
 ```bash
 git clone https://github.com/wazuh/wazuh-docker.git -b v4.3.9 --depth=1
 ```
+Change directory into `single-node`
 ```bash
 cd wazuh-docker/single-node/
 ```
+Generate certificates to secure traffic between nodes
+```bash
+docker-compose -f generate-indexer-certs.yml run --rm generator
+```
+Start Wazuh using docker-compose
+```bash
+docker-compose up -d
+```
 
+### **Multi-Node Deployment**
+Clone the repository
+```bash
+git clone https://github.com/wazuh/wazuh-docker.git -b v4.3.9 --depth=1
+```
+Change directory into `multi-node`
+```bash
+cd wazuh-docker/multi-node/
+```
+Generate certificates to secure traffic between nodes
+```bash
+docker-compose -f generate-indexer-certs.yml run --rm generator
+```
+Start Wazuh using docker-compose
+```bash
+docker-compose up -d
+```
 
 # Wazuh Agent Installation
 ## Linux
