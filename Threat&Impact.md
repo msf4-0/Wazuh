@@ -56,3 +56,35 @@ Malware is malicious software that may disable affected computers. Most malware 
 Phishing scams try to steal users' credentials or sensitive information such as credit card numbers. In this situation, scammers send users emails or text messages that appear to be from a credible source that contains fake URLs.
 
 #### **Impact of Phishing**
+
+A phishing attack is focused at password theft. When passwords are stolen, a cyber criminal has potentially gained access to a company's extremely private data. Once successfully hacked into an organization's network, thieves may install encryption ransomware, preventing access to systems and data until a ransom is paid. Expect significant business interruption as your IT staff work to detect the ransomware, engage with employees, upgrade security systems, negotiate with authorities, and restore the files.
+
+### **Ransomware**
+
+Ransomware is a complex malware that exploits system flaws and uses powerful encryption to encrypt data or system functions. Ransomware is used by cybercriminals to demand payment in return for freeing the system.
+
+#### **Impact of Ransomware**
+
+Ransomware has the ability to rapidly spread throughout an organization, impacting many devices and systems. Ransomware attacks may be disastrous for organizations, resulting in the loss of critical data and operational disruption. In several cases, organisations have had to pay enormous quantities of money to ransomware attackers, often in cryptocurrency so that it is difficult to identify who the organisation paid to.
+
+### **SQL Injection**
+
+SQL injection attacks inject malicious code in vulnerable applications, resulting in backend database query results and the execution of commands or similar actions that the user did not request.
+
+#### **Impact of SQL Injection**
+
+SQL injection can put the application at risk of breach, compromising data confidentiality and integrity as well as authentication and authorization parts of the application. An attacker can steal sensitive information such as user passwords, trade secrets, or transaction records from databases utilised by vulnerable systems or applications. SQL injection vulnerabilities should never be left unpatched; they must be addressed in all cases. If an application's authentication or authorisation components are compromised, an attacker may be able to login as any other user, such as an administrator, which escalates their privileges.
+
+### **Zero-Day Exploit**
+
+Zero-day exploit attacks make use of previously discovered hardware and software flaws. These problems might exist for days, months, or years before developers become aware of them.
+
+#### **Impact of Zero-Day Exploit**
+
+- **Data Theft:**
+  
+  A zero-day vulnerability may be used by attackers to steal important and sensitive data from your organization, staff, and clients. They may steal money, sell it to other criminals on the dark web, commit identity theft, or extort the victims using this info.
+
+- **Account Takeover:**
+  
+  Attackers can use this flaw to gain unauthorised control and access to your network, website, server, application, or any other system. They may use phishing or malware to send harmful messages to your contact list.
