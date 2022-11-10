@@ -252,7 +252,7 @@ The installer can be downloaded with the link at [Wazuh Agent Installer](https:/
 
 #### **Powershell**
 
-The same can be done at the [Linux](www.google.com) section in the powershell. Fill in the data with the Windows OS selected and copy the command into powershell to execute.
+The same can be done at the [Linux](#linux) section in the powershell. Fill in the data with the Windows OS selected and copy the command into powershell to execute.
 
 ### **Agents In Cluster**
 
