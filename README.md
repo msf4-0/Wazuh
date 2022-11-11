@@ -14,14 +14,14 @@ For lightweight deployment, use Ubuntu Server for less resource consumption on t
 
 Download the installer
 
-```shell
-curl -sO https://packages.wazuh.com/4.3/wazuh-install.sh
+```console
+# curl -sO https://packages.wazuh.com/4.3/wazuh-install.sh
 ```
 
 Execute the script
 
-```shell
-sudo bash ./wazuh-install.sh -a
+```console
+# bash ./wazuh-install.sh -a
 ```
 
 After successfully running the script, an output containing the credentials to access Wazuh will be printed.
@@ -36,8 +36,8 @@ INFO: Installation finished.
 
 All the passwords can be printed with this command
 
-```shell
-sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
+```console
+# tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
 ```
 
 ### **Cluster Deployment**
@@ -68,8 +68,8 @@ The master node can be configured as follow:
 - node-name: Set the name of the master node
 - key: The key used must be 32 characters and the same key needs to be used across all nodes in the cluster. A key can be generated with the command:
 
-  ```shell
-  openssl rand -hex 16  
+  ```console
+  # openssl rand -hex 16  
   ```
 
 - node-type: Set the node type. (Master/Worker)
@@ -83,8 +83,8 @@ More information can be found [here](https://documentation.wazuh.com/current/use
 
 Restart the master node:
 
-```shell
-sudo systemctl restart wazuh-manager
+```console
+# systemctl restart wazuh-manager
 ```
 
 #### **Worker Node**
@@ -107,14 +107,14 @@ sudo systemctl restart wazuh-manager
 
 Restart the worker node:
 
-```shell
-sudo systemctl restart wazuh-manager
+```console
+# systemctl restart wazuh-manager
 ```
 
 Run the following command to check if the configuration is correct:
 
-```shell
-sudo /var/ossec/bin/cluster_control -l
+```console
+# /var/ossec/bin/cluster_control -l
 ```
 
 The expected output example:
@@ -133,8 +133,8 @@ worker01-node  worker  4.3.9   172.22.0.3
 
 Increase max_map_count on your host witht the following command:
 
-```bash
-sysctl -w vm.max_map_count=262144
+```console
+# sysctl -w vm.max_map_count=262144
 ```
 
 Permenantly set the value by setting `vm.max_map_count=262144` in `/etc/sysctl.conf`.
@@ -145,48 +145,48 @@ Permenantly set the value by setting `vm.max_map_count=262144` in `/etc/sysctl.c
 
 Run Docker installation script
 
-```bash
-curl -sSL https://get.docker.com/ | sh
+```console
+# curl -sSL https://get.docker.com/ | sh
 ```
 
 Start docker service
 
-```bash
-systemctl enable docker
-systemctl start docker
+```console
+# systemctl enable docker
+# systemctl start docker
 ```
 
 ##### **Docker Compose**
 
 Download Docker Compose binary
 
-```bash
-curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```console
+# curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 ```
 
 Grant execution permissions
 
-```bash
-chmod +x /usr/local/bin/docker-compose
+```console
+# chmod +x /usr/local/bin/docker-compose
 ```
 
 > **Note:** If docker-compose fail to start after installation, a symlink can be created.
 
-```bash
-ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+```console
+# ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
 Test if the installation is complete
 
-```bash
-docker-compose --version
+```console
+# docker-compose --version
 ```
 
 #### **Single-Node Deployment**
 
 Clone the repository
 
-```bash
+```consolele
 git clone https://github.com/wazuh/wazuh-docker.git -b v4.3.9 --depth=1
 ```
 
@@ -317,12 +317,276 @@ Real-time monitoring is configured with the `realtime` attribute of the director
 
 ### **Vulnerabilities Detection**
 
-> **Configuration added soon**
-
 Wazuh is able to detect vulnerabilities in the applications installed on agents using the Vulnerability Detector module. This software audit is performed through the integration of vulnerability feeds indexed by Canonical, Debian, Red Hat, Arch Linux, ALAS (Amazon Linux Advisories Security), Microsoft, and the National Vulnerability Database.
+
+#### **Vulnerability Detection Configuration**
+
+Enable `vulnerability-detector` in `ossec.conf` at Wazuh Manager.
+
+```xml
+<ossec_config>
+<vulnerability-detector>
+    <enabled>yes</enabled>
+    <interval>5m</interval>
+    <ignore_time>6h</ignore_time>
+    <run_on_start>yes</run_on_start>
+
+    <!-- Ubuntu OS vulnerabilities -->
+    <provider name="canonical">
+    <enabled>yes</enabled>
+    <os>trusty</os>
+    <os>xenial</os>
+    <os>bionic</os>
+    <os>focal</os>
+    <os>jammy</os>
+    <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- Debian OS vulnerabilities -->
+    <provider name="debian">
+    <enabled>yes</enabled>
+    <os>stretch</os>
+    <os>buster</os>
+    <os>bullseye</os>
+    <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- RedHat OS vulnerabilities -->
+    <provider name="redhat">
+    <enabled>yes</enabled>
+    <os>5</os>
+    <os>6</os>
+    <os>7</os>
+    <os>8</os>
+    <os allow="Centos Linux-8">8</os>
+    <os>9</os>
+    <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- Windows OS vulnerabilities -->
+    <provider name="msu">
+    <enabled>yes</enabled>
+    <update_interval>1h</update_interval>
+    </provider>
+
+    <!-- Aggregate vulnerabilities -->
+    <provider name="nvd">
+    <enabled>yes</enabled>
+    <update_from_year>2010</update_from_year>
+    <update_interval>1h</update_interval>
+    </provider>
+
+</vulnerability-detector>
+</ossec_config>
+```
+
+If the Wazuh Agent is installed in a Windows endpoint, configure the file at `C:\Program Files (x86)\ossec-agent\ossec.conf` to enable `hotfixes` and `packages` collection in the syscollector component:
+
+```xml
+<wodle name="syscollector">
+    <disabled>no</disabled>
+    <interval>1h</interval>
+    <scan_on_start>yes</scan_on_start>
+    <hardware>yes</hardware>
+    <os>yes</os>
+    <network>yes</network>
+    <packages>yes</packages>
+    <hotfixes>yes</hotfixes>
+    <ports all="no">yes</ports>
+    <processes>yes</processes>
+</wodle>
+```
+
+If the Wazuh Agent is installed in a Linux endpoint, configure the file at `/var/ossec/etc/ossec.conf` to enable software `packages` collection in the syscollector component.
+
+```xml
+<wodle name="syscollector">
+    <disabled>no</disabled>
+    <interval>1h</interval>
+    <scan_on_start>yes</scan_on_start>
+    <hardware>yes</hardware>
+    <os>yes</os>
+    <network>yes</network>
+    <packages>yes</packages>
+    <ports all="no">yes</ports>
+    <processes>yes</processes>
+<   /wodle>
+```
 
 ### **VirusTotal Integration**
 
 > **Configuration added soon**
 
 Wazuh can scan monitored files for malicious content in monitored files. This solution is possible through an integration with VirusTotal, which is a powerful platform that aggregates multiple antivirus products along with an online scanning engine. Combining this tool with our FIM engine provides a simple means of scanning the files that are monitored to inspect them for malicious content.
+
+#### **VirusTotal Integration Configuration**
+
+> **Note:**  
+>
+> - VirusTotal is an external API so there is a API request limit.
+> - Only monitor important directories such as `/root`, or `/home/user/Downloads` to directly scan for malware as soon as the file is downloaded.
+> - Requires Internet connection.
+
+Enable File Integrity Monitoring in `/var/ossec/etc/ossec.conf` of the Wazuh Agent to monitor `/root` in real time.
+
+```xml
+<syscheck>
+    <directories whodata="yes">/root</directories>
+</syscheck>
+```
+
+At the Wazuh Manager, add the following rules to `/var/ossec/etc/rules/local_rules.xml` to generate an alert if a file is added or modified in the `/root` directory.
+
+```xml
+<group name="syscheck,pci_dss_11.5,nist_800_53_SI.7,">
+    <!-- Rules for Linux systems -->
+    <rule id="100200" level="7">
+        <if_sid>550</if_sid>
+        <field name="file">/root</field>
+        <description>File modified in /root directory.</description>
+    </rule>
+    <rule id="100201" level="7">
+        <if_sid>554</if_sid>
+        <field name="file">/root</field>
+        <description>File added to /root directory.</description>
+    </rule>
+</group>
+```
+
+Add the following configuration to the `/var/ossec/etc/ossec.conf` file at the Wazuh manager. Replace `YOUR_VIRUS_TOTAL_API_KEY` with your own API key. An API key can be obtained by signing up at [VirusTotal](https://www.virustotal.com/gui/join-us). Then head to this [page](https://www.virustotal.com/gui/my-apikey) to get an API key.
+
+```xml
+<ossec_config>
+  <integration>
+    <name>virustotal</name>
+    <api_key>YOUR_VIRUS_TOTAL_API_KEY</api_key> <!-- Replace with your VirusTotal API key -->
+    <rule_id>100200,100201</rule_id>
+    <alert_format>json</alert_format>
+  </integration>
+</ossec_config>
+```
+
+Create a `/var/ossec/active-response/bin/remove-threat.sh` active response script at the endpoint for the removal of a file from the system.
+
+```bash
+#!/bin/bash
+
+LOCAL=`dirname $0`;
+cd $LOCAL
+cd ../
+
+PWD=`pwd`
+
+read INPUT_JSON
+FILENAME=$(echo $INPUT_JSON | jq -r .parameters.alert.data.virustotal.source.file)
+COMMAND=$(echo $INPUT_JSON | jq -r .command)
+LOG_FILE="${PWD}/../logs/active-responses.log"
+
+#------------------------ Analyze command -------------------------#
+if [ ${COMMAND} = "add" ]
+then
+ # Send control message to execd
+ printf '{"version":1,"origin":{"name":"remove-threat","module":"active-response"},"command":"check_keys", "parameters":{"keys":[]}}\n'
+
+ read RESPONSE
+ COMMAND2=$(echo $RESPONSE | jq -r .command)
+ if [ ${COMMAND2} != "continue" ]
+ then
+  echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Remove threat active response aborted" >> ${LOG_FILE}
+  exit 0;
+ fi
+fi
+
+# Removing file
+rm -f $FILENAME
+if [ $? -eq 0 ]; then
+ echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Successfully removed threat" >> ${LOG_FILE}
+else
+ echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Error removing threat" >> ${LOG_FILE}
+fi
+
+exit 0;
+```
+
+Change owner and file permissions of `/var/ossec/active-response/bin/remove-threat.sh`.
+
+```console
+# chmod 750 /var/ossec/active-response/bin/remove-threat.sh
+# chown root:wazuh /var/ossec/active-response/bin/remove-threat.sh
+```
+
+Install jq to allow the script to process JSON input:
+
+```console
+# apt-get install jq -y
+```
+
+Add the command and active response into Wazuh Manager `ossec.conf` to enable the manager to use `remove-threat.sh` script when VirusTotal query results for threat is a positive match.
+
+```xml
+<ossec_config>
+    <command>
+        <name>remove-threat</name>
+        <executable>remove-threat.sh</executable>
+        <timeout_allowed>no</timeout_allowed>
+    </command>
+
+    <active-response>
+        <disabled>no</disabled>
+        <command>remove-threat</command>
+        <location>local</location>
+        <rules_id>87105</rules_id>
+    </active-response>
+</ossec_config>
+```
+
+Edit `/var/ossec/etc/decoders/local_decoder.xml` at Wazuh Manager and add the active response decoder configuration.
+
+```xml
+<decoder name="ar_log_fields">
+    <parent>ar_log</parent>
+    <regex offset="after_parent">^(\S+) Removed threat located at (\S+)</regex>
+    <order>script_name, path</order>
+</decoder>
+```
+
+Add rules to `/var/ossec/etc/rules/local_rules.xml` at Wazuh Manager to get alert about the active response results.
+
+```xml
+<group name="virustotal,">
+    <rule id="100092" level="12">
+        <if_sid>657</if_sid>
+        <match>Successfully removed threat</match>
+        <description>$(parameters.program) removed threat located at $(parameters.alert.data.virustotal.source.file)</description>
+    </rule>
+
+    <rule id="100093" level="12">
+        <if_sid>657</if_sid>
+        <match>Error removing threat</match>
+        <description>Error removing threat located at $(parameters.alert.data.virustotal.source.file)</description>
+    </rule>
+</group>
+```
+
+Restart Wazuh Agent to apply configuration.
+
+```console
+# systemctl restart wazuh-agent
+```
+
+Restart Wazuh Manager to apply configuration.
+
+```console
+# systemctl restart wazuh-manager
+```
+
+#### **Generating Alert for VirusTotal**
+
+Download a malicious test file (it is harmless but gets recognized by various antivirus software) to `/root` in the endpoint. VirusTotal will detect it as maliciouis and the active response will remove the file that was downloaded.
+
+```console
+# cd /root
+# curl -LO http://www.eicar.org/download/eicar.com && ls -lah eicar.com
+```
+
+An alert should be generated in the Wazuh Dashboard in `Security events` module.
