@@ -466,47 +466,7 @@ Add the following configuration to the `/var/ossec/etc/ossec.conf` file at the W
 </ossec_config>
 ```
 
-Create a `/var/ossec/active-response/bin/remove-threat.sh` active response script at the endpoint for the removal of a file from the system.
-
-```bash
-#!/bin/bash
-
-LOCAL=`dirname $0`;
-cd $LOCAL
-cd ../
-
-PWD=`pwd`
-
-read INPUT_JSON
-FILENAME=$(echo $INPUT_JSON | jq -r .parameters.alert.data.virustotal.source.file)
-COMMAND=$(echo $INPUT_JSON | jq -r .command)
-LOG_FILE="${PWD}/../logs/active-responses.log"
-
-#------------------------ Analyze command -------------------------#
-if [ ${COMMAND} = "add" ]
-then
- # Send control message to execd
- printf '{"version":1,"origin":{"name":"remove-threat","module":"active-response"},"command":"check_keys", "parameters":{"keys":[]}}\n'
-
- read RESPONSE
- COMMAND2=$(echo $RESPONSE | jq -r .command)
- if [ ${COMMAND2} != "continue" ]
- then
-  echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Remove threat active response aborted" >> ${LOG_FILE}
-  exit 0;
- fi
-fi
-
-# Removing file
-rm -f $FILENAME
-if [ $? -eq 0 ]; then
- echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Successfully removed threat" >> ${LOG_FILE}
-else
- echo "`date '+%Y/%m/%d %H:%M:%S'` $0: $INPUT_JSON Error removing threat" >> ${LOG_FILE}
-fi
-
-exit 0;
-```
+Create a `/var/ossec/active-response/bin/remove-threat.sh` active response script at the endpoint for the removal of a file from the system. Copy the [remove-threat.sh](/remove-threat.sh) script into the created file.
 
 Change owner and file permissions of `/var/ossec/active-response/bin/remove-threat.sh`.
 
