@@ -266,6 +266,57 @@ Pointing the agent to the cluster node
 </client>
 ```
 
+## **Wazuh Manager & Wazuh Agent Uninstall**
+
+### **Wazuh Manager**
+
+In the case where the Wazuh Manager is needed to be uninstalled, go to the directory where the `wazuh-install.sh` was stored. Then use the `-u` flag to uninstall the Wazuh Manager as follow:
+
+```console
+# bash wazuh-install.sh -u
+```
+
+### **Wazuh Agent**
+
+If the Wazuh Agent on a certain machine is needed to be uninstalled, use the following command on the machine where the Wazuh Agent is installed:
+
+```console
+# sudo apt remove wazuh-agent
+```
+
+This will only uninstall the Wazuh Agent on the machine, but it will not update the Wazuh Manager that it was uninstalled so on the Wazuh Dashboard, it will only show the agent is disconnected. To fully remove it on the dashboard, run the following command:
+
+```console
+# cd /var/ossec/bin
+# ./manage_agents
+```
+
+The expected output would look like:
+
+```console
+****************************************
+* Wazuh v4.3.10 Agent manager.         *
+* The following options are available: *
+****************************************
+   (A)dd an agent (A).
+   (E)xtract key for an agent (E).
+   (L)ist already added agents (L).
+   (R)emove an agent (R).
+   (Q)uit.
+Choose your action: A,E,L,R or Q:
+```
+
+Type in `r` or `R` (not cap sensitive) where the output would look like:
+
+```console
+Available agents:
+   ID: 001, Name: wazuh-agent, IP: any
+   ID: 003, Name: donkodile, IP: any
+Provide the ID of the agent to be removed (or '\q' to quit):
+```
+
+Provide the agent ID that is needed to be removed so that it will not show the agent is disconnected after uninstall on the Wazuh Dashboard.
+
 ## **Features**
 
 ### **Active Reponse**
